@@ -25,10 +25,10 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
           supabase secrets set \
-            MIDTRANS_SERVER_KEY=${{ secrets.MIDTRANS_SERVER_KEY }} \
-            MIDTRANS_IS_PRODUCTION=${{ secrets.MIDTRANS_IS_PRODUCTION }} \
-            APP_URL=${{ secrets.APP_URL }} \
-            SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} \
+            MIDTRANS_SERVER_KEY="${{ secrets.MIDTRANS_SERVER_KEY }}" \
+            MIDTRANS_IS_PRODUCTION="${{ secrets.MIDTRANS_IS_PRODUCTION }}" \
+            APP_URL="${{ secrets.APP_URL }}" \
+            SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
             --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Deploy create-payment function
@@ -48,4 +48,4 @@ jobs:
             --no-verify-jwt
 
       - name: Done
-        run: echo "✅ Semua Edge Functions berhasil di-deploy!"
+        run: echo "✅ Edge Functions berhasil di-deploy!"
