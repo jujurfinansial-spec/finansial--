@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finansial OS — Jujur Finansial</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;--bg3:#f0efe9;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9b9b96;
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);
+  --r-md:8px;--r-lg:12px;--r-xl:16px;
+  --purple:#7F77DD;--purple-l:#EEEDFE;--purple-d:#3C3489;--purple-b:#AFA9EC;--purple-m:#534AB7;
+  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#085041;--teal-b:#5DCAA5;--teal-m:#0F6E56;
+  --amber:#EF9F27;--amber-l:#FAEEDA;--amber-d:#854F0B;--amber-b:#FAC775;
+  --red:#E24B4A;--red-l:#FCEBEB;--red-d:#A32D2D;--red-b:#F09595;
+  --green:#639922;--green-l:#EAF3DE;--green-d:#3B6D11;--green-b:#97C459;
+  --blue-l:#E6F1FB;--blue-d:#0C447C;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1c;--bg2:#2a2a27;--bg3:#232320;
+    --text:#f0efe9;--text2:#a0a09a;--text3:#6b6b67;
+    --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.20);
+    --purple-l:#26215C;--purple-d:#CECBF6;--purple-b:#534AB7;--purple-m:#AFA9EC;
+    --teal-l:#04342C;--teal-d:#9FE1CB;--teal-b:#0F6E56;--teal-m:#5DCAA5;
+    --amber-l:#412402;--amber-d:#FAC775;--amber-b:#854F0B;
+    --red-l:#501313;--red-d:#F7C1C1;--red-b:#A32D2D;
+    --green-l:#173404;--green-d:#C0DD97;--green-b:#3B6D11;
+    --blue-l:#042C53;--blue-d:#85B7EB;
+  }
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;padding:1.5rem 1rem 4rem;font-size:15px;line-height:1.6}
+.page{max-width:760px;margin:0 auto}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-xl);padding:1rem 1.25rem;margin-bottom:1rem}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:36px;height:36px;background:var(--purple);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8}
+.brand-name{font-size:16px;font-weight:600;color:var(--text)}
+.brand-sub{font-size:12px;color:var(--text3)}
+.period{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2)}
+.period select{font-size:13px;padding:5px 10px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--bg2);color:var(--text)}
+.period select:focus{outline:none}
+
+.nav{display:flex;gap:3px;background:var(--bg2);border-radius:var(--r-lg);padding:4px;margin-bottom:1rem}
+.nb{flex:1;padding:8px 4px;font-size:12px;font-weight:500;text-align:center;border-radius:var(--r-md);cursor:pointer;color:var(--text2);border:none;background:transparent;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .12s}
+.nb svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.nb:hover{background:var(--bg);color:var(--text)}
+.nb.on{background:var(--bg);color:var(--text);border:0.5px solid var(--border2)}
+
+.pnl{display:none}.pnl.on{display:block}
+
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:.875rem}
+.ct{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:1rem;display:flex;align-items:center;gap:5px}
+.ct svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;opacity:.7;flex-shrink:0}
+
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:.875rem}
+.mc{background:var(--bg2);border-radius:var(--r-md);padding:12px 14px}
+.mc-l{font-size:12px;color:var(--text2);margin-bottom:4px}
+.mc-v{font-size:18px;font-weight:600;color:var(--text)}
+.mc-s{font-size:11px;color:var(--text3);margin-top:2px}
+
+.row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.rl{flex:1;min-width:140px;font-size:14px;color:var(--text)}
+.rl small{display:block;font-size:12px;color:var(--text3);margin-top:2px}
+.iw{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.pfx{font-size:13px;color:var(--text2)}
+input[type=number]{width:150px;padding:7px 10px;font-size:14px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--bg2);color:var(--text);text-align:right;-moz-appearance:textfield;transition:border-color .15s}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{outline:none;border-color:var(--purple)}
+input[type=text]{padding:7px 10px;font-size:14px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--bg2);color:var(--text);transition:border-color .15s}
+input[type=text]:focus{outline:none;border-color:var(--purple)}
+input[type=date]{padding:7px 10px;font-size:14px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--bg2);color:var(--text)}
+input[type=date]:focus{outline:none}
+select{padding:7px 10px;font-size:14px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--bg2);color:var(--text)}
+select:focus{outline:none;border-color:var(--purple)}
+input[type=range]{flex:1;height:4px;accent-color:var(--purple);cursor:pointer}
+
+.slrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.slrow label{font-size:13px;color:var(--text2);flex:0 0 160px}
+.slval{font-size:14px;font-weight:600;color:var(--text);min-width:50px;text-align:right}
+
+.addrow{display:grid;grid-template-columns:1fr 130px 140px 110px auto;gap:6px;align-items:center;margin-bottom:8px}
+.addrow input[type=text],.addrow input[type=number],.addrow select,.addrow input[type=date]{width:100%}
+.btn-add{padding:7px 14px;font-size:14px;font-weight:600;background:var(--amber);color:#fff;border:none;border-radius:var(--r-md);cursor:pointer;white-space:nowrap;transition:opacity .12s}
+.btn-add:hover{opacity:.88}
+.btn-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:3px 8px;border-radius:4px;line-height:1;transition:background .12s}
+.btn-del:hover{background:var(--bg2);color:var(--text)}
+.btn-ghost{width:100%;margin-top:6px;padding:8px;font-size:13px;color:var(--text2);background:transparent;border:0.5px dashed var(--border2);border-radius:var(--r-md);cursor:pointer;transition:background .12s}
+.btn-ghost:hover{background:var(--bg2)}
+
+.lhdr{display:grid;grid-template-columns:1fr 120px 130px 85px 28px;gap:6px;font-size:12px;font-weight:600;color:var(--text2);padding:0 0 7px;border-bottom:0.5px solid var(--border2);margin-bottom:4px}
+.lhdr span:nth-child(2){text-align:right}
+.litem{display:grid;grid-template-columns:1fr 120px 130px 85px 28px;gap:6px;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:14px}
+.litem:last-child{border-bottom:none}
+.li-amt{text-align:right;font-weight:600;color:var(--text)}
+.li-date{font-size:13px;color:var(--text2)}
+.li-empty{text-align:center;padding:2rem;font-size:14px;color:var(--text3)}
+
+.bdg{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--r-md)}
+.bm{background:var(--amber-l);color:var(--amber-d)}
+.bt{background:var(--blue-l);color:var(--blue-d)}
+.bta{background:var(--red-l);color:var(--red-d)}
+.ba{background:var(--green-l);color:var(--green-d)}
+.bk{background:var(--purple-l);color:var(--purple-d)}
+.bl{background:var(--bg2);color:var(--text2)}
+
+.ptrack{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;margin:6px 0}
+.pfill{height:100%;border-radius:4px;transition:width .3s,background .3s}
+.plbls{display:flex;justify-content:space-between;font-size:12px;color:var(--text2)}
+
+.barrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.barlbl{font-size:13px;flex:0 0 110px}
+.bartrack{flex:1;height:7px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.barfill{height:100%;border-radius:3px}
+.baramt{font-size:12px;color:var(--text2);flex:0 0 90px;text-align:right}
+
+.mulg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.mulb{padding:10px 6px;text-align:center;border:0.5px solid var(--border2);border-radius:var(--r-md);cursor:pointer;background:var(--bg2);font-size:13px;font-weight:600;color:var(--text2);transition:all .12s}
+.mulb:hover{background:var(--bg);color:var(--text)}
+.mulb.on{background:var(--purple-l);border-color:var(--purple-b);color:var(--purple-d)}
+.mulb small{display:block;font-size:10px;font-weight:400;color:var(--text3);margin-top:3px}
+.mulb.on small{color:var(--purple)}
+
+.tbox{background:var(--purple-l);border:0.5px solid var(--purple-b);border-radius:var(--r-lg);padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:10px 0}
+.tb-l{font-size:11px;font-weight:600;color:var(--purple-m);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.tb-a{font-size:24px;font-weight:600;color:var(--purple-d)}
+.tb-s{font-size:12px;color:var(--purple);margin-top:3px}
+
+.insg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.insb{padding:10px 8px;text-align:center;border:0.5px solid var(--border2);border-radius:var(--r-md);cursor:pointer;background:var(--bg2);transition:all .12s}
+.insb:hover{background:var(--bg);border-color:var(--border2)}
+.insb.on{background:var(--teal-l);border-color:var(--teal-b)}
+.insb-t{font-size:13px;font-weight:600;color:var(--text)}
+.insb.on .insb-t{color:var(--teal-d)}
+.insb-r{font-size:11px;color:var(--text3);margin-top:2px}
+.insb.on .insb-r{color:var(--teal)}
+
+.rbox{background:var(--teal-l);border:0.5px solid var(--teal-b);border-radius:var(--r-lg);padding:1.25rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:10px 0}
+.rl2{font-size:11px;font-weight:600;color:var(--teal-m);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ra{font-size:22px;font-weight:600;color:var(--teal-d)}
+.rs{font-size:12px;color:var(--teal);margin-top:3px}
+
+.pyfbox{background:var(--purple-l);border:0.5px solid var(--purple-b);border-radius:var(--r-lg);padding:1.25rem;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.pyf-l{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:6px}
+.pyf-a{font-size:28px;font-weight:600;color:var(--purple-d)}
+.pyf-s{font-size:12px;color:var(--purple);margin-top:4px}
+.pyf-b{background:var(--purple);color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:var(--r-md);white-space:nowrap;flex-shrink:0}
+
+.alcg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.alc{border-radius:var(--r-md);padding:12px}
+.alc-l{font-size:11px;font-weight:600;margin-bottom:5px}
+.alc-a{font-size:16px;font-weight:600}
+.alc-p{font-size:11px;margin-top:3px}
+
+.vbox{border-radius:var(--r-lg);padding:1rem 1.25rem;margin-top:10px}
+.vt{font-size:14px;font-weight:600;margin-bottom:4px}
+.vb{font-size:13px;line-height:1.6}
+
+.hbar-row{margin-bottom:12px}
+.hbar-top{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);margin-bottom:5px}
+.hbar-top span:last-child{font-weight:600;color:var(--text)}
+.act-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.act-row:last-child{border-bottom:none}
+.act-icon{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+.act-text{font-size:13px;color:var(--text);line-height:1.5}
+
+.foot{text-align:center;margin-top:2rem;font-size:12px;color:var(--text3)}
+.foot a{color:var(--purple);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+
+@media(max-width:600px){
+  .nav .nb span.nb-txt{display:none}
+  .addrow{grid-template-columns:1fr 1fr;gap:6px}
+  .addrow .btn-add{grid-column:span 2}
+  .lhdr,.litem{grid-template-columns:1fr 110px 28px}
+  .lhdr span:nth-child(3),.lhdr span:nth-child(4),.litem .li-cat,.litem .li-date{display:none}
+  .tbox,.rbox{grid-template-columns:1fr}
+  .alcg{grid-template-columns:1fr 1fr}
+  .mulg{grid-template-columns:1fr 1fr}
+  .insg{grid-template-columns:1fr 1fr}
+  .pyfbox{flex-direction:column;align-items:flex-start}
+}
+@media print{body{background:#fff;padding:0}.btn-del,.btn-add,.btn-ghost{display:none}.pnl{display:block!important}.nav{display:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+    </div>
+    <div>
+      <div class="brand-name">Finansial OS</div>
+      <div class="brand-sub">by Jujur Finansial · data tersimpan di browser</div>
+    </div>
+  </div>
+  <div class="period">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <select id="sm"></select>
+    <select id="sy"></select>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nb on" onclick="tab('ov')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <span class="nb-txt">Overview</span>
+  </button>
+  <button class="nb" onclick="tab('gj')">
+    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+    <span class="nb-txt">Gaji</span>
+  </button>
+  <button class="nb" onclick="tab('tr')">
+    <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    <span class="nb-txt">Pengeluaran</span>
+  </button>
+  <button class="nb" onclick="tab('dd')">
+    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span class="nb-txt">Darurat</span>
+  </button>
+  <button class="nb" onclick="tab('iv')">
+    <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    <span class="nb-txt">Investasi</span>
+  </button>
+</nav>
+
+<!-- OVERVIEW -->
+<div class="pnl on" id="pov">
+  <div class="mg">
+    <div class="mc"><div class="mc-l">Penghasilan bulan ini</div><div class="mc-v" id="ov1">Rp 0</div><div class="mc-s">take-home pay</div></div>
+    <div class="mc"><div class="mc-l">Sisa setelah alokasi</div><div class="mc-v" id="ov2">Rp 0</div><div class="mc-s" id="ov2s">0% dari gaji</div></div>
+    <div class="mc"><div class="mc-l">Pengeluaran bulan ini</div><div class="mc-v" id="ov3">Rp 0</div><div class="mc-s" id="ov3s">0% dari anggaran</div></div>
+    <div class="mc"><div class="mc-l">Dana darurat</div><div class="mc-v" id="ov4">Rp 0</div><div class="mc-s" id="ov4s">0% dari target</div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Kesehatan finansial</div>
+    <div id="hbars"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Aksi prioritas</div>
+    <div id="oacts"></div>
+  </div>
+</div>
+
+<!-- GAJI -->
+<div class="pnl" id="pgj">
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>Penghasilan</div>
+    <div class="row"><div class="rl">Gaji pokok / take-home pay<small>Setelah potongan pajak &amp; BPJS</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="gg" value="5000000" min="0" step="100000" oninput="save();upd()"></div></div>
+    <div class="row"><div class="rl">Penghasilan tambahan<small>Freelance, bisnis sampingan, dll.</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="gt" value="0" min="0" step="100000" oninput="save();upd()"></div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Pengeluaran tetap</div>
+    <div id="gfl"></div>
+    <button class="btn-ghost" onclick="addF()">+ Tambah pos pengeluaran tetap</button>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Kebutuhan variabel</div>
+    <div id="gvl"></div>
+    <button class="btn-ghost" onclick="addV()">+ Tambah pos variabel</button>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Target Pay Yourself First</div>
+    <div class="slrow"><label>% PYF target</label><input type="range" id="gpyf" min="5" max="30" value="10" step="1" oninput="save();upd()"><span class="slval" id="gpyfl">10%</span></div>
+    <p style="font-size:12px;color:var(--text3)">Rekomendasi minimum 10% dari total penghasilan. Geser untuk lihat dampaknya.</p>
+  </div>
+  <div class="alcg" id="galc"></div>
+  <div class="pyfbox">
+    <div>
+      <div class="pyf-l">&#128274; Pay Yourself First — kunci sebelum bayar apapun</div>
+      <div class="pyf-a" id="gpyfa">Rp 0</div>
+      <div class="pyf-s" id="gpyfd">Pindahkan ke rekening terpisah di hari gajian</div>
+    </div>
+    <div class="pyf-b" id="gpyfb">10%</div>
+  </div>
+  <div class="vbox" id="gv" style="border:0.5px solid var(--border);background:var(--bg2)"><div class="vt" id="gvt" style="color:var(--text)">—</div><div class="vb" id="gvb" style="color:var(--text2)"></div></div>
+</div>
+
+<!-- TRACKER -->
+<div class="pnl" id="ptr">
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Anggaran bulan ini</div>
+    <div class="row"><div class="rl">Total anggaran</div><div class="iw"><span class="pfx">Rp</span><input type="number" id="tbg" value="3000000" min="0" step="100000" oninput="save();upd()"></div></div>
+    <div class="ptrack"><div class="pfill" id="tpf" style="background:var(--teal);width:0%"></div></div>
+    <div class="plbls"><span id="tpl">Rp 0 terpakai</span><span id="tpr">Rp 0 sisa</span></div>
+  </div>
+  <div class="mg">
+    <div class="mc"><div class="mc-l">Total pengeluaran</div><div class="mc-v" id="ttot">Rp 0</div></div>
+    <div class="mc"><div class="mc-l">Transaksi</div><div class="mc-v" id="tcnt">0</div></div>
+    <div class="mc"><div class="mc-l">Rata-rata/hari</div><div class="mc-v" id="tavg">Rp 0</div><div class="mc-s" id="tavgs"></div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah pengeluaran</div>
+    <div class="addrow">
+      <input type="text" id="tn" placeholder="Nama pengeluaran...">
+      <input type="number" id="ta" placeholder="Nominal" min="0" step="1000">
+      <select id="tc"><option value="makan">Makan &amp; minum</option><option value="transport">Transportasi</option><option value="tagihan">Tagihan</option><option value="anak">Anak &amp; keluarga</option><option value="kesehatan">Kesehatan</option><option value="lainnya">Lainnya</option></select>
+      <input type="date" id="td">
+      <button class="btn-add" onclick="addT()">+ Tambah</button>
+    </div>
+    <p style="font-size:12px;color:var(--text3)">Tekan Enter atau klik Tambah setelah mengisi semua kolom.</p>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Daftar pengeluaran</div>
+    <div class="lhdr"><span>Keterangan</span><span style="text-align:right">Nominal</span><span>Kategori</span><span>Tanggal</span><span></span></div>
+    <div id="tlist"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="4" height="20" rx="1"/><rect x="9" y="8" width="4" height="14" rx="1"/><rect x="16" y="13" width="4" height="9" rx="1"/></svg>Per kategori</div>
+    <div id="tbars"></div>
+  </div>
+  <div class="vbox" id="tv" style="border:0.5px solid var(--border);background:var(--bg2)"><div class="vt" id="tvt" style="color:var(--text)">—</div><div class="vb" id="tvb" style="color:var(--text2)"></div></div>
+</div>
+
+<!-- DARURAT -->
+<div class="pnl" id="pdd">
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Data keuangan</div>
+    <div class="row"><div class="rl">Pengeluaran bulanan<small>Otomatis tersinkron dari tab Gaji</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="dp" value="3500000" min="0" step="100000" oninput="save();upd()"></div></div>
+    <div class="row"><div class="rl">Status pekerjaan</div><select id="dst" onchange="setSt()"><option value="karyawan">Karyawan tetap</option><option value="kontrak">Kontrak / freelance</option><option value="wirausaha">Wirausaha</option><option value="pns">PNS / ASN</option></select></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Target dana darurat</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px">Pilih berapa bulan pengeluaran yang ingin dikumpulkan:</p>
+    <div class="mulg" id="dmg"></div>
+    <p style="font-size:12px;color:var(--text3)" id="dtip"></p>
+  </div>
+  <div class="tbox">
+    <div><div class="tb-l">Target dana darurat</div><div class="tb-a" id="dtar">Rp 0</div><div class="tb-s" id="dtars">0 bulan pengeluaran</div></div>
+    <div>
+      <div class="tb-l">Sudah terkumpul</div><div class="tb-a" id="dada">Rp 0</div><div class="tb-s" id="dadap">0% dari target</div>
+      <div class="ptrack" style="margin-top:8px;background:rgba(0,0,0,0.08)"><div class="pfill" id="dpf" style="background:var(--purple);width:0%"></div></div>
+      <div class="plbls" style="color:var(--purple-m)"><span id="dpl">—</span><span id="dpp">0%</span></div>
+    </div>
+  </div>
+  <div class="mg">
+    <div class="mc"><div class="mc-l">Kekurangan</div><div class="mc-v" id="dkrg">—</div></div>
+    <div class="mc"><div class="mc-l">Estimasi tercapai</div><div class="mc-v" id="dbln">—</div><div class="mc-s" id="dwkt"></div></div>
+    <div class="mc"><div class="mc-l">Setoran/bulan</div><div class="mc-v" id="dset">—</div></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Progres tabungan</div>
+    <div class="row"><div class="rl">Dana darurat saat ini<small>Total yang sudah disisihkan khusus untuk darurat</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="dai" value="500000" min="0" step="100000" oninput="save();upd()"></div></div>
+    <div class="row"><div class="rl">Rencana setoran/bulan<small>Yang bisa disisihkan rutin setiap bulan</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="dsi" value="500000" min="0" step="50000" oninput="save();upd()"></div></div>
+  </div>
+  <div class="vbox" id="dv" style="border:0.5px solid var(--border);background:var(--bg2)"><div class="vt" id="dvt" style="color:var(--text)">—</div><div class="vb" id="dvb" style="color:var(--text2)"></div></div>
+</div>
+
+<!-- INVESTASI -->
+<div class="pnl" id="piv">
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Parameter investasi</div>
+    <div class="row"><div class="rl">Modal awal (opsional)<small>Dana yang langsung diinvestasikan sekarang</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="im" value="1000000" min="0" step="100000" oninput="save();upd()"></div></div>
+    <div class="row"><div class="rl">Investasi rutin/bulan<small>Jumlah yang disisihkan setiap bulan secara konsisten</small></div><div class="iw"><span class="pfx">Rp</span><input type="number" id="ir" value="500000" min="0" step="50000" oninput="save();upd()"></div></div>
+    <div class="slrow"><label>Jangka waktu</label><input type="range" id="ith" min="1" max="30" value="10" step="1" style="accent-color:var(--teal)" oninput="save();upd()"><span class="slval" id="ithl">10 tahun</span></div>
+    <div class="slrow"><label>Return per tahun</label><input type="range" id="irt" min="3" max="25" value="10" step="1" style="accent-color:var(--teal)" oninput="save();upd()"><span class="slval" id="irtl">10%/thn</span></div>
+  </div>
+  <div class="card">
+    <div class="ct"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Instrumen investasi</div>
+    <div class="insg" id="iig"></div>
+    <p style="font-size:12px;color:var(--text3)" id="iigtip"></p>
+  </div>
+  <div class="rbox">
+    <div><div class="rl2">Nilai akhir investasi</div><div class="ra" id="itot">Rp 0</div><div class="rs" id="isub">dalam 0 tahun</div></div>
+    <div><div class="rl2">Total modal disetor</div><div class="ra" id="imod">Rp 0</div><div class="rs">modal + setoran rutin</div></div>
+    <div><div class="rl2">Keuntungan majemuk</div><div class="ra" id="ign">Rp 0</div><div class="rs" id="imul">0× dari modal</div></div>
+  </div>
+  <div class="mg">
+    <div class="mc"><div class="mc-l">Di 5 tahun</div><div class="mc-v" id="i5">—</div></div>
+    <div class="mc"><div class="mc-l">Di 10 tahun</div><div class="mc-v" id="i10">—</div></div>
+    <div class="mc"><div class="mc-l">Di 20 tahun</div><div class="mc-v" id="i20">—</div></div>
+    <div class="mc"><div class="mc-l">Uang berlipat</div><div class="mc-v" id="ir72">— thn</div><div class="mc-s">Rule of 72</div></div>
+  </div>
+  <div class="vbox" id="ivv" style="border:0.5px solid var(--border);background:var(--bg2)"><div class="vt" id="ivt" style="color:var(--text)">—</div><div class="vb" id="ivb" style="color:var(--text2)"></div></div>
+</div>
+
+<div class="foot">
+  Finansial OS · Tool #1–4 terintegrasi · Dibuat oleh <a href="https://youtube.com/@jujurfinansial" target="_blank">Jujur Finansial</a> · Gratis untuk viewers &#127881;
+</div>
+
+</div>
+<script>
+const fmtS=n=>{n=Math.round(n);if(n>=1e9)return'Rp\u00a0'+(n/1e9).toFixed(1)+'M';if(n>=1e6)return'Rp\u00a0'+(n/1e6).toFixed(1)+' jt';return'Rp\u00a0'+n.toLocaleString('id-ID')};
+const fmt=n=>'Rp\u00a0'+Math.round(n).toLocaleString('id-ID');
+const MNS=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const CATL={makan:'Makan & minum',transport:'Transportasi',tagihan:'Tagihan',anak:'Anak & keluarga',kesehatan:'Kesehatan',lainnya:'Lainnya'};
+const CATC={makan:'#EF9F27',transport:'#378ADD',tagihan:'#E24B4A',anak:'#639922',kesehatan:'#7F77DD',lainnya:'#888780'};
+const CATCL={makan:'bm',transport:'bt',tagihan:'bta',anak:'ba',kesehatan:'bk',lainnya:'bl'};
+const INS=[{id:'deposito',l:'Deposito',r:5,tip:'Aman, dijamin LPS. Cocok untuk pemula yang belum siap risiko.'},{id:'reksadana',l:'Reksa dana',r:10,tip:'Dikelola manajer investasi. Risiko sedang, return moderat.'},{id:'saham',l:'Saham / indeks',r:15,tip:'Return tertinggi jangka panjang. Fluktuatif, butuh kesabaran.'},{id:'sukuk',l:'Sukuk',r:7,tip:'Surat utang negara. Return lebih tinggi dari deposito, risiko rendah.'},{id:'emas',l:'Emas',r:9,tip:'Lindung nilai inflasi. Likuid, bisa mulai dari 1 gram.'},{id:'custom',l:'Custom (%)',r:12,tip:'Atur sendiri target return dengan slider di atas.'}];
+const STREC={karyawan:{m:3,t:'Karyawan tetap: minimal 3 bulan, idealnya 6 bulan.'},kontrak:{m:6,t:'Kontrak/freelance: minimal 6 bulan karena penghasilan tidak menentu.'},wirausaha:{m:9,t:'Wirausaha: disarankan 9–12 bulan pengeluaran.'},pns:{m:3,t:'PNS/ASN: 3 bulan sudah cukup sebagai buffer awal.'}};
+const VS={g:'border:0.5px solid #97C459;background:#EAF3DE;',a:'border:0.5px solid #EF9F27;background:#FAEEDA;',r:'border:0.5px solid #F09595;background:#FCEBEB;',p:'border:0.5px solid #AFA9EC;background:#EEEDFE;',tl:'border:0.5px solid #5DCAA5;background:#E1F5EE;',n:'border:0.5px solid var(--border);background:var(--bg2);'};
+const VT={g:'#3B6D11',a:'#854F0B',r:'#A32D2D',p:'#3C3489',tl:'#085041',n:'var(--text)'};
+
+const now=new Date();
+const sm=document.getElementById('sm'),sy=document.getElementById('sy');
+MNS.forEach((m,i)=>{const o=new Option(m,i);if(i===now.getMonth())o.selected=true;sm.add(o)});
+[2024,2025,2026,2027].forEach(y=>{const o=new Option(y,y);if(y===now.getFullYear())o.selected=true;sy.add(o)});
+sm.onchange=upd;sy.onchange=upd;
+document.getElementById('td').value=now.toISOString().split('T')[0];
+
+let fxI=[{id:1,l:'Cicilan rumah / KPR',v:1500000},{id:2,l:'Tagihan listrik & air',v:300000},{id:3,l:'Pulsa & internet',v:200000},{id:4,l:'Premi asuransi',v:150000},{id:5,l:'Uang sekolah anak',v:400000}];
+let vrI=[{id:1,l:'Bahan makanan & dapur',v:700000},{id:2,l:'Transportasi harian',v:300000},{id:3,l:'Kebutuhan anak & keluarga',v:250000}];
+let fxN=30,vrN=30;
+let tIs=[{id:1,name:'Belanja dapur',amount:350000,cat:'makan',date:'2025-06-03'},{id:2,name:'Bensin motor',amount:80000,cat:'transport',date:'2025-06-04'},{id:3,name:'Bayar listrik',amount:220000,cat:'tagihan',date:'2025-06-05'},{id:4,name:'Susu & pampers',amount:180000,cat:'anak',date:'2025-06-07'},{id:5,name:'Makan siang kantor',amount:75000,cat:'makan',date:'2025-06-09'}];
+let tN=30,aMul=6,aIns='reksadana';
+
+function load(){try{const d=JSON.parse(localStorage.getItem('fos')||'{}');if(d.gg)document.getElementById('gg').value=d.gg;if(d.gt)document.getElementById('gt').value=d.gt;if(d.gpyf)document.getElementById('gpyf').value=d.gpyf;if(d.tbg)document.getElementById('tbg').value=d.tbg;if(d.dp)document.getElementById('dp').value=d.dp;if(d.dai)document.getElementById('dai').value=d.dai;if(d.dsi)document.getElementById('dsi').value=d.dsi;if(d.im)document.getElementById('im').value=d.im;if(d.ir)document.getElementById('ir').value=d.ir;if(d.ith)document.getElementById('ith').value=d.ith;if(d.irt)document.getElementById('irt').value=d.irt;if(d.aMul)aMul=d.aMul;if(d.aIns)aIns=d.aIns;if(d.fxI&&d.fxI.length)fxI=d.fxI;if(d.vrI&&d.vrI.length)vrI=d.vrI;if(d.tIs&&d.tIs.length)tIs=d.tIs;}catch(e){}}
+function save(){try{localStorage.setItem('fos',JSON.stringify({gg:document.getElementById('gg').value,gt:document.getElementById('gt').value,gpyf:document.getElementById('gpyf').value,tbg:document.getElementById('tbg').value,dp:document.getElementById('dp').value,dai:document.getElementById('dai').value,dsi:document.getElementById('dsi').value,im:document.getElementById('im').value,ir:document.getElementById('ir').value,ith:document.getElementById('ith').value,irt:document.getElementById('irt').value,aMul,aIns,fxI,vrI,tIs}));}catch(e){}}
+
+function tab(id){
+  document.querySelectorAll('.nb').forEach((b,i)=>b.classList.toggle('on',['ov','gj','tr','dd','iv'][i]===id));
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.toggle('on',p.id==='p'+id));
+}
+function rfx(){document.getElementById('gfl').innerHTML=fxI.map((it,i)=>`<div class="row"><input type="text" style="flex:1" value="${it.l}" oninput="fxI[${i}].l=this.value;save()"><div class="iw"><span class="pfx">Rp</span><input type="number" value="${it.v}" min="0" step="10000" oninput="fxI[${i}].v=parseFloat(this.value)||0;save();upd()"></div><button class="btn-del" onclick="fxI.splice(${i},1);rfx();save();upd()">&#215;</button></div>`).join('')}
+function rvr(){document.getElementById('gvl').innerHTML=vrI.map((it,i)=>`<div class="row"><input type="text" style="flex:1" value="${it.l}" oninput="vrI[${i}].l=this.value;save()"><div class="iw"><span class="pfx">Rp</span><input type="number" value="${it.v}" min="0" step="10000" oninput="vrI[${i}].v=parseFloat(this.value)||0;save();upd()"></div><button class="btn-del" onclick="vrI.splice(${i},1);rvr();save();upd()">&#215;</button></div>`).join('')}
+function addF(){fxI.push({id:fxN++,l:'Pos tetap baru',v:0});rfx();save();upd()}
+function addV(){vrI.push({id:vrN++,l:'Pos variabel baru',v:0});rvr();save();upd()}
+function addT(){const n=document.getElementById('tn').value.trim(),a=parseFloat(document.getElementById('ta').value)||0,c=document.getElementById('tc').value,d=document.getElementById('td').value;if(!n||a<=0){document.getElementById('tn').focus();return}tIs.push({id:tN++,name:n,amount:a,cat:c,date:d});document.getElementById('tn').value='';document.getElementById('ta').value='';document.getElementById('tn').focus();save();upd()}
+document.getElementById('tn').addEventListener('keydown',e=>{if(e.key==='Enter')addT()});
+document.getElementById('ta').addEventListener('keydown',e=>{if(e.key==='Enter')addT()});
+
+function buildMul(){document.getElementById('dmg').innerHTML=[3,6,9,12].map(v=>`<div class="mulb${v===aMul?' on':''}" onclick="aMul=${v};buildMul();save();upd()">${v} bulan<small>${{3:'Minimum',6:'Ideal',9:'Lebih aman',12:'Sangat aman'}[v]}</small></div>`).join('')}
+function setSt(){const s=document.getElementById('dst').value,r=STREC[s];aMul=r.m;document.getElementById('dtip').textContent=r.t;buildMul();save();upd()}
+function buildIns(){document.getElementById('iig').innerHTML=INS.map(i=>`<div class="insb${i.id===aIns?' on':''}" onclick="selIns('${i.id}')"><div class="insb-t">${i.l}</div><div class="insb-r">${i.id==='custom'?'atur sendiri':'~'+i.r+'%/thn'}</div></div>`).join('')}
+function selIns(id){aIns=id;const ins=INS.find(i=>i.id===id);if(id!=='custom'){document.getElementById('irt').value=ins.r;document.getElementById('irtl').textContent=ins.r+'%/thn'}document.getElementById('iigtip').textContent=ins.tip;buildIns();save();upd()}
+function fv(m,r,rt,t){const mo=rt/100/12,n=t*12;return m*Math.pow(1+mo,n)+(mo>0?r*((Math.pow(1+mo,n)-1)/mo):r*n)}
+function vset(box,tid,bid,title,body,col){const b=document.getElementById(box),t=document.getElementById(tid),bd=document.getElementById(bid);b.style.cssText='border-radius:var(--r-lg);padding:1rem 1.25rem;margin-top:10px;'+(VS[col]||VS.n);t.style.color=VT[col]||VT.n;t.textContent=title;bd.style.color=VT[col]||'var(--text2)';bd.textContent=body}
+
+function upd(){
+  const G=parseFloat(document.getElementById('gg').value)||0,GT=parseFloat(document.getElementById('gt').value)||0,TG=G+GT;
+  const PYF=parseInt(document.getElementById('gpyf').value);
+  document.getElementById('gpyfl').textContent=PYF+'%';document.getElementById('gpyfb').textContent=PYF+'%';
+  const TF=fxI.reduce((s,x)=>s+x.v,0),TV=vrI.reduce((s,x)=>s+x.v,0),TS=TF+TV;
+  const PY=Math.round(TG*PYF/100),SS=TG-TS-PY,SP=TG>0?Math.round((SS/TG)*100):0;
+  document.getElementById('gpyfa').textContent=fmt(PY);
+  document.getElementById('gpyfd').textContent='Pindahkan '+fmt(PY)+' ke rekening terpisah di hari gajian';
+  const alcD=[{l:'Pay Yourself First',a:PY,c:'#7F77DD',bg:'#EEEDFE',tc:'#3C3489'},{l:'Pengeluaran tetap',a:TF,c:'#378ADD',bg:'#E6F1FB',tc:'#0C447C'},{l:'Kebutuhan variabel',a:TV,c:'#1D9E75',bg:'#E1F5EE',tc:'#085041'},{l:'Dana fleksibel',a:Math.max(0,SS),c:'#EF9F27',bg:'#FAEEDA',tc:'#854F0B'}];
+  document.getElementById('galc').innerHTML=alcD.map(a=>{const p=TG>0?Math.round((a.a/TG)*100):0;return`<div class="alc" style="background:${a.bg};border:0.5px solid ${a.c}60"><div class="alc-l" style="color:${a.c}">${a.l}</div><div class="alc-a" style="color:${a.tc}">${fmtS(a.a)}</div><div class="alc-p" style="color:${a.c}">${p}%</div></div>`}).join('');
+  if(SS<0)vset('gv','gvt','gvb','⚠️ Pengeluaran melebihi penghasilan',`Kekurangan ${fmt(Math.abs(SS))}/bulan. Audit pos tetap segera.`,'r');
+  else if(SP>=20)vset('gv','gvt','gvb','✅ Kondisi keuangan sehat',`Sisa ${fmt(SS)} (${SP}%). Pertimbangkan naikkan PYF ke 15–20%.`,'g');
+  else if(SP>=5)vset('gv','gvt','gvb','🟡 Cukup ketat, masih aman',`Sisa ${fmt(SS)} (${SP}%). Fokus tingkatkan penghasilan.`,'a');
+  else vset('gv','gvt','gvb','🔴 Ruang gerak sangat sempit',`Sisa ${fmt(Math.max(0,SS))} (${SP}%). Audit semua pos pengeluaran.`,'r');
+
+  const MO=parseInt(sm.value),YR=parseInt(sy.value);
+  const BG=parseFloat(document.getElementById('tbg').value)||0;
+  const fil=tIs.filter(x=>{if(!x.date)return true;const d=new Date(x.date);return d.getMonth()===MO&&d.getFullYear()===YR});
+  const TT=fil.reduce((s,x)=>s+x.amount,0),TS2=BG-TT,TP=BG>0?Math.min(Math.round((TT/BG)*100),100):0;
+  const TDA=new Date(YR,MO+1,0).getDate(),TAVG=fil.length>0?Math.round(TT/TDA):0;
+  const tpf=document.getElementById('tpf');tpf.style.width=TP+'%';tpf.style.background=TP>=100?'#E24B4A':TP>=80?'#EF9F27':'#1D9E75';
+  document.getElementById('tpl').textContent=fmt(TT)+' terpakai ('+TP+'%)';
+  document.getElementById('tpr').textContent=TS2>=0?fmt(TS2)+' sisa':fmt(Math.abs(TS2))+' over budget';
+  document.getElementById('ttot').textContent=fmtS(TT);
+  document.getElementById('tcnt').textContent=fil.length+' transaksi';
+  document.getElementById('tavg').textContent=fmtS(TAVG);
+  document.getElementById('tavgs').textContent='per hari ('+TDA+' hari)';
+  const tl=document.getElementById('tlist');
+  if(!fil.length){tl.innerHTML='<div class="li-empty">Belum ada transaksi di '+MNS[MO]+' '+YR+'</div>';}
+  else{const s=[...fil].sort((a,b)=>(b.date||'').localeCompare(a.date||''));tl.innerHTML=s.map(x=>{const d=x.date?new Date(x.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'}):'—';return`<div class="litem"><span>${x.name}</span><span class="li-amt">${fmt(x.amount)}</span><span class="li-cat"><span class="bdg ${CATCL[x.cat]}">${CATL[x.cat]}</span></span><span class="li-date">${d}</span><button class="btn-del" onclick="tIs=tIs.filter(i=>i.id!==${x.id});save();upd()">&#215;</button></div>`}).join('')+'<div style="padding:10px 0;border-top:0.5px solid var(--border2);font-size:14px;font-weight:600;display:flex;justify-content:space-between"><span>Total</span><span style="text-align:right">'+fmt(TT)+'</span></div>';}
+  const cats={};fil.forEach(x=>{cats[x.cat]=(cats[x.cat]||0)+x.amount});
+  const ca=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const tb=document.getElementById('tbars');
+  if(!ca.length){tb.innerHTML='<div class="li-empty" style="padding:1rem 0">Belum ada data kategori</div>';}
+  else{const mx=ca[0][1];tb.innerHTML=ca.map(([c,a])=>{const pb=mx>0?Math.round((a/mx)*100):0,pt=TT>0?Math.round((a/TT)*100):0;return`<div class="barrow"><span class="barlbl"><span class="bdg ${CATCL[c]}">${CATL[c]}</span></span><div class="bartrack"><div class="barfill" style="width:${pb}%;background:${CATC[c]}"></div></div><span class="baramt">${fmtS(a)} <span style="font-size:11px;color:var(--text3)">${pt}%</span></span></div>`}).join('');}
+  const tc2=ca[0];
+  if(!fil.length)vset('tv','tvt','tvb','Belum ada data.','Mulai catat pengeluaran pertamamu.','n');
+  else if(TP>=100)vset('tv','tvt','tvb','⚠️ Anggaran bulan ini habis',`Over budget ${fmt(Math.abs(TS2))}. Terbesar: ${CATL[tc2[0]]} (${fmtS(tc2[1])}).`,'r');
+  else if(TP>=80)vset('tv','tvt','tvb','🟡 Anggaran hampir habis',`${TP}% terpakai, sisa ${fmt(TS2)}. Rem pengeluaran variabel.`,'a');
+  else if(TP<=50)vset('tv','tvt','tvb','✅ Pengeluaran terkendali',`Baru ${TP}% terpakai, sisa ${fmt(TS2)}.`,'g');
+  else vset('tv','tvt','tvb','📊 Berjalan normal',`${TP}% terpakai. Terbesar: ${ca.length?CATL[tc2[0]]:'-'}.`,'n');
+
+  const DP=parseFloat(document.getElementById('dp').value)||0,DA=parseFloat(document.getElementById('dai').value)||0,DS=parseFloat(document.getElementById('dsi').value)||0;
+  const DT=DP*aMul,DK=Math.max(0,DT-DA),DPCT=DT>0?Math.min(Math.round((DA/DT)*100),100):0;
+  const DB=DS>0&&DK>0?Math.ceil(DK/DS):null;
+  document.getElementById('dtar').textContent=fmtS(DT);document.getElementById('dtars').textContent=aMul+' bulan pengeluaran';
+  document.getElementById('dada').textContent=fmtS(DA);document.getElementById('dadap').textContent=DPCT+'% dari target';
+  document.getElementById('dpf').style.width=DPCT+'%';
+  document.getElementById('dpl').textContent=DA>=DT?'✅ Target tercapai!':'Kurang '+fmtS(DK);
+  document.getElementById('dpp').textContent=DPCT+'%';
+  document.getElementById('dkrg').textContent=DA>=DT?'—':fmtS(DK);
+  document.getElementById('dset').textContent=DS>0?fmt(DS)+'/bln':'—';
+  if(DA>=DT){document.getElementById('dbln').textContent='✅ Tercapai';document.getElementById('dwkt').textContent='';}
+  else if(DB){document.getElementById('dbln').textContent=DB+' bulan';const td=new Date();td.setMonth(td.getMonth()+DB);document.getElementById('dwkt').textContent=td.toLocaleDateString('id-ID',{month:'long',year:'numeric'});}
+  else{document.getElementById('dbln').textContent='—';document.getElementById('dwkt').textContent='Isi rencana setoran';}
+  if(!DP)vset('dv','dvt','dvb','Isi pengeluaran bulanan dulu.','','n');
+  else if(DA>=DT)vset('dv','dvt','dvb','✅ Dana darurat terpenuhi!','Sekarang bisa fokus ke investasi jangka panjang.','g');
+  else if(DPCT>=50)vset('dv','dvt','dvb','💜 Separuh jalan — terus konsisten!',`${DPCT}% dari target.${DB?' Tercapai dalam '+DB+' bulan.':' Isi setoran untuk estimasi.'}`,'p');
+  else if(DPCT>0)vset('dv','dvt','dvb','🟡 Baru mulai — jangan berhenti',`${DPCT}% dari target ${fmtS(DT)}. Otomatisasi setoran supaya konsisten.`,'a');
+  else vset('dv','dvt','dvb','⚠️ Dana darurat belum ada',`Prioritas sebelum investasi. Target minimum: ${fmtS(DP*3)} (3 bulan).`,'r');
+
+  const IM=parseFloat(document.getElementById('im').value)||0,IR=parseFloat(document.getElementById('ir').value)||0;
+  const ITH=parseInt(document.getElementById('ith').value),IRT=parseInt(document.getElementById('irt').value);
+  document.getElementById('ithl').textContent=ITH+' tahun';document.getElementById('irtl').textContent=IRT+'%/thn';
+  const ITM=IM+IR*ITH*12,IAK=fv(IM,IR,IRT,ITH),IGN=Math.max(0,IAK-ITM),IMUL=ITM>0?(IAK/ITM).toFixed(1):'0';
+  const I72=IRT>0?Math.round(72/IRT):0;
+  document.getElementById('itot').textContent=fmtS(IAK);document.getElementById('isub').textContent='dalam '+ITH+' tahun';
+  document.getElementById('imod').textContent=fmtS(ITM);document.getElementById('ign').textContent=fmtS(IGN);
+  document.getElementById('imul').textContent=IMUL+'\u00d7 dari modal';
+  document.getElementById('i5').textContent=ITH>=5?fmtS(fv(IM,IR,IRT,5)):'< 5 tahun';
+  document.getElementById('i10').textContent=ITH>=10?fmtS(fv(IM,IR,IRT,10)):'< 10 tahun';
+  document.getElementById('i20').textContent=ITH>=20?fmtS(fv(IM,IR,IRT,20)):'< 20 tahun';
+  document.getElementById('ir72').textContent=I72+' thn';
+  const imn=parseFloat(IMUL);
+  if(!IM&&!IR)vset('ivv','ivt','ivb','Masukkan nominal investasi untuk melihat proyeksi.','','n');
+  else if(imn>=5)vset('ivv','ivt','ivb','🚀 Potensi pertumbuhan luar biasa!',`Modal berpotensi tumbuh ${IMUL}\u00d7 menjadi ${fmtS(IAK)}. Inilah kekuatan bunga majemuk.`,'tl');
+  else if(imn>=2)vset('ivv','ivt','ivb','✅ Pertumbuhan solid jangka panjang',`${fmtS(ITM)} \u2192 ${fmtS(IAK)} (${IMUL}\u00d7 lipat). Keuntungan majemuk: ${fmtS(IGN)}.`,'tl');
+  else vset('ivv','ivt','ivb','💡 Coba perpanjang jangka waktu atau naikkan setoran','Bunga majemuk butuh waktu bekerja. Geser slider ke 10–15 tahun.','p');
+
+  document.getElementById('ov1').textContent=fmtS(TG);
+  document.getElementById('ov2').textContent=fmtS(Math.max(0,SS));document.getElementById('ov2s').textContent=SP+'% dari gaji';
+  document.getElementById('ov3').textContent=fmtS(TT);document.getElementById('ov3s').textContent=TP+'% dari anggaran';
+  document.getElementById('ov4').textContent=fmtS(DA);document.getElementById('ov4s').textContent=DPCT+'% dari target';
+  const hd=[{l:'Alokasi gaji',p:TG>0?Math.min(Math.round(((TS+PY)/TG)*100),100):0,c:'#7F77DD',ok:SS>=0},{l:'Tracker pengeluaran',p:TP,c:TP>=100?'#E24B4A':TP>=80?'#EF9F27':'#1D9E75',ok:TP<80},{l:'Dana darurat',p:DPCT,c:'#7F77DD',ok:DA>=DT},{l:'Investasi berjalan',p:IR>0?100:0,c:'#1D9E75',ok:IR>0}];
+  document.getElementById('hbars').innerHTML=hd.map(h=>`<div class="hbar-row"><div class="hbar-top"><span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${h.ok?'#639922':'#EF9F27'};margin-right:6px;vertical-align:middle"></span>${h.l}</span><span>${h.p}%</span></div><div class="ptrack" style="height:6px;margin:0"><div class="pfill" style="width:${h.p}%;background:${h.c};height:100%;border-radius:3px"></div></div></div>`).join('');
+  const acts=[];
+  if(!TG)acts.push({c:'#E24B4A',t:'Isi data gaji di tab Gaji untuk mulai menggunakan dashboard ini.'});
+  if(SS<0)acts.push({c:'#E24B4A',t:'Pengeluaran melebihi gaji — audit pos tetap segera di tab Gaji.'});
+  if(DA<DT&&DP>0)acts.push({c:'#7F77DD',t:`Dana darurat baru ${DPCT}% dari target. Sisihkan ${fmt(DS||Math.round(DP*0.1))}/bulan secara otomatis.`});
+  if(TP>=80)acts.push({c:'#EF9F27',t:`Anggaran bulan ini ${TP}% — pertimbangkan rem pengeluaran variabel.`});
+  if(!IR)acts.push({c:'#1D9E75',t:'Belum ada investasi rutin. Mulai dari Rp 100.000/bulan di tab Investasi.'});
+  if(!acts.length)acts.push({c:'#639922',t:'Semua indikator aman. Pertahankan konsistensinya setiap bulan!'});
+  document.getElementById('oacts').innerHTML=acts.map(a=>`<div class="act-row"><svg class="act-icon" viewBox="0 0 24 24" fill="none" stroke="${a.c}" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span class="act-text">${a.t}</span></div>`).join('');
+}
+
+load();rfx();rvr();buildMul();buildIns();setSt();selIns('reksadana');upd();
+</script>
+</body>
+</html>
