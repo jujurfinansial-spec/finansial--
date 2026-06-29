@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B5C4E">
+<title>Finansial OS — Jujur Finansial</title>
+<meta name="description" content="Kelola gaji, anggaran, dana darurat, dan investasi dalam satu dashboard. Akses selamanya, sekali bayar.">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;--bg3:#f0efe9;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9b9b96;
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);
+  --r-md:8px;--r-lg:12px;--r-xl:16px;--r-xxl:22px;
+  --purple:#0B5C4E;--purple-l:#D4EDE9;--purple-d:#064035;--purple-b:#3DAF93;--purple-m:#0B7C66;
+  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#085041;
+  --amber:#EF9F27;--amber-l:#FAEEDA;--amber-d:#854F0B;
+  --red:#E24B4A;--red-l:#FCEBEB;--red-d:#A32D2D;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1c;--bg2:#2a2a27;--bg3:#161614;
+    --text:#f0efe9;--text2:#a0a09a;--text3:#6b6b67;
+    --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.20);
+    --purple-l:#0A2E28;--purple-d:#7FCEC0;--purple-b:#0E7060;--purple-m:#7FCEC0;
+    --teal-l:#04342C;--teal-d:#9FE1CB;
+    --amber-l:#412402;--amber-d:#FAC775;
+    --red-l:#501313;--red-d:#F7C1C1;
+  }
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;line-height:1.6}
+
+.wrap{max-width:1040px;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+
+/* ---------- TOPBAR ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0 2rem}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:38px;height:38px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px;color:#fff;letter-spacing:-0.5px;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.brand-name{font-size:16px;font-weight:700;color:var(--text)}
+.brand-sub{font-size:11.5px;color:var(--text3)}
+.topbar-cta{font-size:13.5px;font-weight:600;color:var(--purple-m);background:none;border:none;cursor:pointer}
+
+/* ---------- HERO ---------- */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:2.5rem;align-items:center;margin-bottom:3rem}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--teal-d);background:var(--teal-l);padding:5px 12px;border-radius:99px;margin-bottom:1.1rem}
+.eyebrow svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2}
+.hero h1{font-size:clamp(28px,4.2vw,42px);font-weight:700;letter-spacing:-0.01em;line-height:1.12;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--purple-m);position:relative}
+.hero p.lead{font-size:16px;color:var(--text2);max-width:480px;margin-bottom:1.6rem}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}
+.btn{font-size:14.5px;font-weight:600;padding:13px 22px;border-radius:var(--r-md);border:none;cursor:pointer;transition:transform .12s,opacity .12s;display:inline-flex;align-items:center;gap:8px}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-primary:hover{opacity:.92}
+.btn-outline{background:var(--bg);color:var(--text);border:1px solid var(--border2)}
+.btn-outline:hover{background:var(--bg2)}
+.trust{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text3)}
+.trust span{display:flex;align-items:center;gap:5px}
+.trust svg{width:13px;height:13px;stroke:var(--teal);fill:none;stroke-width:2.4}
+
+.hero-visual{position:relative}
+.mockcard{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-xl);padding:1.4rem;box-shadow:0 24px 60px -20px rgba(20,15,60,.25)}
+.mockcard .mg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
+.mockcard .mc2{background:var(--bg2);border-radius:var(--r-md);padding:11px 13px}
+.mockcard .mc2-l{font-size:10.5px;color:var(--text2);margin-bottom:3px}
+.mockcard .mc2-v{font-size:16px;font-weight:700;color:var(--text)}
+.mockcard .bar{height:7px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.mockcard .bar i{display:block;height:100%;border-radius:4px}
+.mockcard .row3{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px}
+.float-badge{position:absolute;top:-14px;right:18px;background:var(--amber);color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;box-shadow:0 8px 20px -6px rgba(0,0,0,.3);transform:rotate(3deg)}
+
+/* ---------- FEATURES ---------- */
+.section-label{font-size:12px;font-weight:700;color:var(--purple-m);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem}
+.section-title{font-size:24px;font-weight:700;margin-bottom:2rem;max-width:480px}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:3rem}
+.feat{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:1.3rem 1.2rem}
+.feat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.9rem}
+.feat-icon svg{width:18px;height:18px;fill:none;stroke-width:1.8}
+.feat h3{font-size:14.5px;font-weight:600;margin-bottom:.35rem}
+.feat p{font-size:13px;color:var(--text2);line-height:1.55}
+
+/* ---------- PRICING ---------- */
+.pricing{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r-xxl);padding:2.4rem 2rem;text-align:center;max-width:480px;margin:0 auto 3rem;position:relative;overflow:hidden}
+.pricing::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--purple),var(--teal))}
+.pricing .pb-tag{font-size:12px;font-weight:700;color:var(--teal-d);background:var(--teal-l);padding:5px 12px;border-radius:99px;display:inline-block;margin-bottom:1.2rem}
+.pricing .pb-price{font-size:44px;font-weight:800;letter-spacing:-0.02em}
+.pricing .pb-price small{font-size:16px;font-weight:600;color:var(--text2)}
+.pricing .pb-old{font-size:14px;color:var(--text3);text-decoration:line-through;margin-bottom:.2rem}
+.pricing .pb-sub{font-size:13px;color:var(--text2);margin:.6rem 0 1.6rem}
+.pb-list{text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:1.8rem}
+.pb-list div{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--text)}
+.pb-list svg{width:15px;height:15px;stroke:var(--teal);fill:none;stroke-width:2.4;flex-shrink:0;margin-top:2px}
+.pricing .btn{width:100%;justify-content:center;padding:14px}
+
+/* ---------- FAQ ---------- */
+.faq{max-width:640px;margin:0 auto 3rem}
+.faq-item{border-bottom:0.5px solid var(--border2);padding:1.1rem 0}
+.faq-q{font-size:14.5px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.faq-q svg{width:16px;height:16px;stroke:var(--text2);fill:none;stroke-width:2;flex-shrink:0;transition:transform .2s}
+.faq-item.on .faq-q svg{transform:rotate(45deg)}
+.faq-a{font-size:13.5px;color:var(--text2);margin-top:.6rem;line-height:1.6;display:none}
+.faq-item.on .faq-a{display:block}
+
+.foot{text-align:center;font-size:12px;color:var(--text3);padding-top:1rem}
+
+/* ---------- MODAL (Auth) ---------- */
+.overlay{position:fixed;inset:0;background:rgba(20,15,30,.45);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:1rem;z-index:100}
+.overlay.on{display:flex}
+.modal{background:var(--bg);border-radius:var(--r-xl);padding:1.8rem 1.7rem;max-width:380px;width:100%;position:relative;box-shadow:0 30px 70px -20px rgba(0,0,0,.4)}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;color:var(--text3);cursor:pointer;line-height:1;padding:4px}
+.modal h2{font-size:18px;font-weight:700;margin-bottom:.3rem}
+.modal p.sub{font-size:13px;color:var(--text2);margin-bottom:1.3rem}
+.modal-tabs{display:flex;gap:3px;background:var(--bg2);border-radius:var(--r-lg);padding:4px;margin-bottom:1.3rem}
+.modal-tabs button{flex:1;padding:8px 4px;font-size:13px;font-weight:600;border:none;background:transparent;border-radius:var(--r-md);cursor:pointer;color:var(--text2)}
+.modal-tabs button.on{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.field{margin-bottom:.9rem}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.field input{width:100%;padding:11px 12px;font-size:14px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--bg2);color:var(--text)}
+.field input:focus{outline:none;border-color:var(--purple)}
+.modal .btn{width:100%;justify-content:center;margin-top:.4rem}
+.modal-msg{font-size:13px;padding:10px 12px;border-radius:var(--r-md);margin-bottom:.9rem;display:none}
+.modal-msg.err{display:block;background:var(--red-l);color:var(--red-d)}
+.modal-msg.ok{display:block;background:var(--teal-l);color:var(--teal-d)}
+.modal-foot{text-align:center;font-size:12.5px;color:var(--text3);margin-top:1.1rem}
+
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+
+@media(max-width:760px){
+  .hero{grid-template-columns:1fr;gap:1.8rem}
+  .features{grid-template-columns:1fr 1fr}
+  .hero-visual{order:-1}
+}
+@media(max-width:480px){
+  .features{grid-template-columns:1fr}
+  .pricing{padding:2rem 1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">JF</div>
+      <div>
+        <div class="brand-name">Jujur Finansial</div>
+        <div class="brand-sub">Finansial OS</div>
+      </div>
+    </div>
+    <button class="topbar-cta" onclick="openAuth('login')">Masuk</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="eyebrow"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Sekali bayar, akses selamanya</div>
+      <h1>Satu dashboard untuk <em>jujur</em> sama kondisi keuanganmu sendiri.</h1>
+      <p class="lead">Atur alokasi gaji, lacak pengeluaran, bangun dana darurat, dan proyeksikan investasi — semuanya tersinkron rapi, tanpa biaya bulanan.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="openAuth('register')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Mulai sekarang — Rp 149.000
+        </button>
+        <button class="btn btn-outline" onclick="openAuth('login')">Sudah punya akun</button>
+      </div>
+      <div class="trust">
+        <span><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Bayar sekali, dipakai seumur hidup</span>
+        <span><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Data tersinkron aman di cloud</span>
+        <span><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Bisa diinstall seperti aplikasi</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="float-badge">Lunas selamanya 🎉</div>
+      <div class="mockcard">
+        <div class="mg2">
+          <div class="mc2"><div class="mc2-l">Sisa setelah alokasi</div><div class="mc2-v" style="color:var(--purple-m)">Rp 2.450.000</div></div>
+          <div class="mc2"><div class="mc2-l">Dana darurat</div><div class="mc2-v" style="color:var(--teal-d)">68%</div></div>
+        </div>
+        <div class="row3"><span>Anggaran bulan ini</span><span>72% terpakai</span></div>
+        <div class="bar"><i style="width:72%;background:var(--amber)"></i></div>
+        <div class="row3"><span>Target dana darurat</span><span>68%</span></div>
+        <div class="bar"><i style="width:68%;background:var(--purple)"></i></div>
+        <div class="row3" style="margin-bottom:0"><span>Investasi (proyeksi 10 thn)</span><span style="font-weight:700;color:var(--teal-d)">3.4×</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section>
+    <div class="section-label">Yang bisa kamu lakukan</div>
+    <div class="section-title">Empat hal penting yang sering diabaikan, jadi satu kebiasaan.</div>
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon" style="background:var(--purple-l)"><svg viewBox="0 0 24 24" stroke="var(--purple-m)"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3>Alokasi Gaji</h3>
+        <p>Bagi take-home pay ke pos tetap, tabungan, dan investasi otomatis dengan aturan persen yang kamu tentukan.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:var(--amber-l)"><svg viewBox="0 0 24 24" stroke="var(--amber-d)"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+        <h3>Tracker Pengeluaran</h3>
+        <p>Catat tiap transaksi per kategori, lihat sisa anggaran bulanan secara real-time tanpa spreadsheet.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:var(--teal-l)"><svg viewBox="0 0 24 24" stroke="var(--teal-d)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Dana Darurat</h3>
+        <p>Tentukan target bulan pengeluaran, pantau progres, dan tahu kapan target itu akan tercapai.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:var(--blue-l,#E6F1FB)"><svg viewBox="0 0 24 24" stroke="#0C447C"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <h3>Proyeksi Investasi</h3>
+        <p>Simulasikan kekuatan bunga majemuk untuk berbagai instrumen dan jangka waktu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="pricing">
+      <div class="pb-tag">Lifetime Access</div>
+      <div class="pb-old">Bukan Rp 49.000/bulan</div>
+      <div class="pb-price">Rp 149.000 <small>/ sekali bayar</small></div>
+      <p class="pb-sub">Tidak ada biaya berulang. Bayar sekali, pakai untuk selamanya.</p>
+      <div class="pb-list">
+        <div><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Semua fitur dashboard finansial</div>
+        <div><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Data tersinkron otomatis di cloud (login dari device manapun)</div>
+        <div><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Bisa diinstall sebagai aplikasi (PWA) di HP &amp; laptop</div>
+        <div><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Update fitur ke depannya gratis</div>
+      </div>
+      <button class="btn btn-primary" onclick="openAuth('register')">Daftar &amp; Bayar Sekarang</button>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="section-label" style="text-align:center">FAQ</div>
+    <div class="section-title" style="text-align:center;margin:0 auto 1.5rem">Pertanyaan yang sering ditanyakan</div>
+    <div class="faq" id="faqList"></div>
+  </section>
+
+  <div class="foot">&copy; <span id="yr"></span> Jujur Finansial. Semua hak dilindungi.</div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">&times;</button>
+    <div class="modal-tabs">
+      <button id="tabLogin" onclick="switchTab('login')">Masuk</button>
+      <button id="tabRegister" onclick="switchTab('register')">Daftar</button>
+    </div>
+
+    <div id="modalMsg" class="modal-msg"></div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" onsubmit="return handleLogin(event)">
+      <h2>Selamat datang kembali</h2>
+      <p class="sub">Masuk untuk lanjut mengelola keuanganmu.</p>
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="email"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPassword" required autocomplete="current-password"></div>
+      <button class="btn btn-primary" type="submit" id="loginBtn">Masuk</button>
+      <div class="modal-foot">Belum punya akun? <a href="#" onclick="switchTab('register');return false;" style="color:var(--purple-m);font-weight:600;text-decoration:none">Daftar di sini</a></div>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form id="registerForm" class="hidden" onsubmit="return handleRegister(event)">
+      <h2>Buat akun baru</h2>
+      <p class="sub">Daftar dulu, lanjut bayar Rp 149.000 untuk akses penuh.</p>
+      <div class="field"><label>Email</label><input type="email" id="regEmail" required autocomplete="email"></div>
+      <div class="field"><label>Password</label><input type="password" id="regPassword" required minlength="6" autocomplete="new-password"></div>
+      <div class="field"><label>Ulangi Password</label><input type="password" id="regPassword2" required minlength="6" autocomplete="new-password"></div>
+      <button class="btn btn-primary" type="submit" id="registerBtn">Daftar &amp; Lanjut Bayar</button>
+      <div class="modal-foot">Sudah punya akun? <a href="#" onclick="switchTab('login');return false;" style="color:var(--purple-m);font-weight:600;text-decoration:none">Masuk di sini</a></div>
+    </form>
+  </div>
+</div>
+
+<script src="/config.js"></script>
+<script>
+(function () {
+  const CDN_URLS = [
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "https://unpkg.com/@supabase/supabase-js@2",
+    "https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.45.4/supabase.min.js",
+  ];
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function loadSupabaseWithFallback(index) {
+    if (index >= CDN_URLS.length) {
+      onSupabaseReady(false);
+      return;
+    }
+    loadScript(CDN_URLS[index])
+      .then(() => onSupabaseReady(true))
+      .catch(() => loadSupabaseWithFallback(index + 1));
+  }
+
+  function onSupabaseReady(success) {
+    const snapScript = document.createElement("script");
+    snapScript.src = window.APP_CONFIG.MIDTRANS_IS_PRODUCTION
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js";
+    snapScript.setAttribute("data-client-key", window.APP_CONFIG.MIDTRANS_CLIENT_KEY);
+    document.head.appendChild(snapScript);
+
+    window.__SUPABASE_LIB_LOADED__ = success;
+    const authScript = document.createElement("script");
+    authScript.src = "/auth.js";
+    authScript.onload = () => {
+      if (typeof window.onAuthScriptLoaded === "function") window.onAuthScriptLoaded();
+    };
+    document.head.appendChild(authScript);
+  }
+
+  loadSupabaseWithFallback(0);
+})();
+</script>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const faqs = [
+  ["Apa benar cuma bayar sekali?","Benar. Rp 149.000 dibayar sekali lewat Midtrans, dan akunmu langsung punya akses penuh selamanya — tidak ada biaya bulanan atau tahunan."],
+  ["Metode pembayaran apa saja yang didukung?","Semua metode yang tersedia di Midtrans: kartu kredit/debit, transfer bank (Virtual Account), e-wallet (GoPay, ShopeePay, dll), dan QRIS."],
+  ["Data keuangan saya disimpan di mana?","Datamu tersimpan aman di database terenkripsi (Supabase) dan hanya bisa diakses oleh akunmu sendiri. Kamu bisa login dari HP atau laptop manapun dan datanya tetap sinkron."],
+  ["Apakah saya harus install dari Play Store / App Store?","Tidak perlu. Finansial OS adalah Progressive Web App — cukup buka di browser lalu pilih 'Tambahkan ke Layar Utama' / 'Install', dan ikonnya akan muncul seperti aplikasi biasa."],
+  ["Bagaimana jika pembayaran saya belum terverifikasi?","Setelah pembayaran berhasil, sistem otomatis memverifikasi dalam beberapa detik. Jika setelah 5 menit status belum berubah, refresh halaman atau hubungi kami."]
+];
+const faqList = document.getElementById('faqList');
+faqList.innerHTML = faqs.map((f,i)=>`
+  <div class="faq-item" onclick="this.classList.toggle('on')">
+    <div class="faq-q">${f[0]}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="faq-a">${f[1]}</div>
+  </div>
+`).join('');
+
+window.onAuthScriptLoaded = function () {
+  if (typeof checkExistingSession === "function") checkExistingSession();
+};
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  });
+}
+</script>
+</body>
+</html>
