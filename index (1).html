@@ -91,6 +91,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica N
 .pricing .pb-price small{font-size:16px;font-weight:600;color:var(--text2)}
 .pricing .pb-old{font-size:14px;color:var(--text3);text-decoration:line-through;margin-bottom:.2rem}
 .pricing .pb-sub{font-size:13px;color:var(--text2);margin:.6rem 0 1.6rem}
+.pricing .pb-launch-note{font-size:12.5px;color:var(--amber-d);background:var(--amber-l);display:inline-block;padding:5px 11px;border-radius:99px;margin-top:.7rem;font-weight:600}
+.pricing .pb-counter{font-size:12.5px;color:var(--text2);margin-top:.9rem;font-weight:600}
+.pricing .pb-counter b{color:var(--purple-m)}
 .pb-list{text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:1.8rem}
 .pb-list div{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--text)}
 .pb-list svg{width:15px;height:15px;stroke:var(--teal);fill:none;stroke-width:2.4;flex-shrink:0;margin-top:2px}
@@ -223,10 +226,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica N
   <!-- PRICING -->
   <section id="pricing">
     <div class="pricing">
-      <div class="pb-tag">Lifetime Access</div>
-      <div class="pb-old">Bukan Rp 49.000/bulan</div>
+      <div class="pb-tag">Harga Peluncuran 🚀</div>
+      <div class="pb-old">Harga normal: Rp 199.000</div>
       <div class="pb-price">Rp 149.000 <small>/ sekali bayar</small></div>
+      <p class="pb-launch-note">Harga akan naik ke Rp 199.000 setelah 100 pengguna pertama</p>
       <p class="pb-sub">Tidak ada biaya berulang. Bayar sekali, pakai untuk selamanya.</p>
+      <!-- COUNTER MANUAL — belum terkoneksi ke Supabase.
+           Edit SLOT_TERPAKAI di bawah tiap kali ada pendaftar baru (lihat <script> di bagian bawah file). -->
+      <div class="pb-counter" id="pbCounter"></div>
       <div class="pb-list">
         <div><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Semua fitur dashboard finansial</div>
         <div><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Data tersinkron otomatis di cloud (login dari device manapun)</div>
@@ -281,6 +288,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica N
   </div>
 </div>
 
+<!-- ===== DEBUG BANNER SEMENTARA — hapus setelah masalah loading CDN selesai didiagnosa ===== -->
+<div id="debugBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a18;color:#0f0;font-family:monospace;font-size:11px;padding:10px;z-index:99999;max-height:140px;overflow:auto;white-space:pre-wrap"></div>
+<script>
+function dbg(msg) {
+  const el = document.getElementById('debugBanner');
+  if (el) el.textContent += msg + '\n';
+  console.log(msg);
+}
+dbg('1. HTML mulai dimuat...');
+window.addEventListener('error', function(e) {
+  dbg('JS ERROR: ' + e.message + ' @ ' + e.filename + ':' + e.lineno);
+});
+</script>
+<!-- ===== END DEBUG BANNER ===== -->
+  
 <script src="/config.js"></script>
 <script>
 (function () {
@@ -332,6 +354,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica N
 </script>
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
+
+// ===== COUNTER SLOT HARGA PELUNCURAN (MANUAL) =====
+// Belum terkoneksi ke Supabase. Update SLOT_TERPAKAI secara manual
+// sesuai jumlah pendaftar nyata di harga ini — jangan biarkan angka ini
+// diam terlalu lama, karena itu akan terlihat tidak jujur ke calon pembeli.
+const TOTAL_SLOT_PELUNCURAN = 100;
+const SLOT_TERPAKAI = 0; // <-- ganti angka ini manual tiap ada pendaftar baru
+const sisaSlot = Math.max(TOTAL_SLOT_PELUNCURAN - SLOT_TERPAKAI, 0);
+document.getElementById('pbCounter').innerHTML = sisaSlot > 0
+  ? `Tersisa <b>${sisaSlot}</b> slot di harga ini`
+  : `Harga peluncuran sudah habis — sekarang Rp 199.000`;
 
 const faqs = [
   ["Apa benar cuma bayar sekali?","Benar. Rp 149.000 dibayar sekali lewat Midtrans, dan akunmu langsung punya akses penuh selamanya — tidak ada biaya bulanan atau tahunan."],
